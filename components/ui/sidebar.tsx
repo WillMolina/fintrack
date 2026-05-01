@@ -6,11 +6,11 @@ import { useEffect } from "react";
 import { createClient } from "@/lib/supabase-browser";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Dashboard", icon: "📊" },
-  { href: "/transactions", label: "Transactions", icon: "💸" },
-  { href: "/credit-cards", label: "Credit Cards", icon: "💳" },
-  { href: "/accounts", label: "Accounts", icon: "🏦" },
-  { href: "/categories", label: "Categories", icon: "🏷️" },
+  { href: "/dashboard", label: "Panel", icon: "📊" },
+  { href: "/transactions", label: "Transacciones", icon: "💸" },
+  { href: "/credit-cards", label: "Tarjetas de Crédito", icon: "💳" },
+  { href: "/accounts", label: "Cuentas", icon: "🏦" },
+  { href: "/categories", label: "Categorías", icon: "🏷️" },
 ];
 
 export function Sidebar({
@@ -57,13 +57,13 @@ export function Sidebar({
         {/* Brand */}
         <div className="flex items-center justify-between px-5 py-6">
           <div className="flex items-center gap-2.5">
-            <span className="text-2xl">💰</span>
+            <img src="/logo.svg" alt="" className="h-8 w-8" />
             <span className="text-lg font-semibold tracking-tight">FinTrack</span>
           </div>
           <button
             onClick={onClose}
             className="rounded-lg p-1.5 text-muted hover:text-white lg:hidden"
-            aria-label="Close menu"
+            aria-label="Cerrar menú"
           >
             ✕
           </button>
@@ -97,7 +97,7 @@ export function Sidebar({
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-3 hover:text-white"
           >
             <span className="text-base">🚪</span>
-            Sign out
+            Cerrar sesión
           </button>
         </div>
       </aside>

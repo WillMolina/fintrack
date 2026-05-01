@@ -5,8 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useRef } from "react";
 import { differenceInDays, parseISO } from "date-fns";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
@@ -85,8 +85,8 @@ export function DashboardView({
   return (
     <div className="pb-28">
       {/* Header + Month Nav */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+      <div className="flex flex-wrap items-center justify-center gap-4">
+        {/*<h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>*/}
         <div className="flex items-center gap-2">
           <Link
             href={{ pathname, query: { month: prevMonth } }}
@@ -128,13 +128,13 @@ export function DashboardView({
           <p className="mt-2 text-3xl font-bold tabular-nums text-brand">
             {formatCurrency(savingsBalance)}
           </p>
-          <p className="mt-1.5 text-xs text-muted">Balance at end of {monthLabel}</p>
+          <p className="mt-1.5 text-xs text-muted">Balance al cierre de {monthLabel}</p>
         </div>
 
         {/* CC Open Cycle Debt */}
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-muted">
-            Credit Card Debt
+            Deuda en Tarjetas
           </p>
           <p className="mt-2 text-3xl font-bold tabular-nums text-danger">
             {formatCurrency(totalCCDebt)}
@@ -144,13 +144,13 @@ export function DashboardView({
               daysLeft > 0 ? (
                 <>
                   <span className="font-medium text-warning">{daysLeft}d</span>{" "}
-                  until cycle closes · {formatDate(earliestCycleEnd!, "MMM d")}
+                  para el cierre del ciclo · {formatDate(earliestCycleEnd!, "MMM d")}
                 </>
               ) : (
-                <span className="text-danger">Cycle ended — close it</span>
+                <span className="text-danger">Ciclo vencido — ciérralo</span>
               )
             ) : (
-              "No open cycles"
+              "Sin ciclos abiertos"
             )}
           </p>
         </div>
@@ -158,7 +158,7 @@ export function DashboardView({
         {/* Monthly Income / Expenses / Balance */}
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-muted">
-            {monthLabel} Summary
+            Resumen de {monthLabel}
           </p>
           <p
             className={`mt-2 text-3xl font-bold tabular-nums ${
@@ -185,15 +185,15 @@ export function DashboardView({
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Spending Trend Chart */}
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-5">
-          <h2 className="text-sm font-medium text-muted">Spending Trend</h2>
+          <h2 className="text-sm font-medium text-muted">Tendencia de Gastos</h2>
           {chartData.length === 0 ? (
             <div className="flex h-56 items-center justify-center text-sm text-muted">
-              No data yet
+              Sin datos aún
             </div>
           ) : (
             <div className="mt-4 h-56">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} barGap={4}>
+                <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                   <XAxis
                     dataKey="month"
@@ -217,9 +217,9 @@ export function DashboardView({
                     formatter={(value: number) => [formatCurrency(value)]}
                     labelStyle={{ color: "#71717a" }}
                   />
-                  <Bar dataKey="expenses" fill="#ef4444" radius={[4, 4, 0, 0]} name="Expenses" />
-                  <Bar dataKey="income" fill="#22c55e" radius={[4, 4, 0, 0]} name="Income" />
-                </BarChart>
+                  <Line dataKey="expenses" stroke="#ef4444" strokeWidth={2} dot={false} name="Gastos" />
+                  <Line dataKey="income" stroke="#18efc6" strokeWidth={2} dot={false} name="Ingresos" />
+                </LineChart>
               </ResponsiveContainer>
             </div>
           )}
@@ -228,11 +228,11 @@ export function DashboardView({
         {/* CC Cycles Comparison */}
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-5">
           <h2 className="text-sm font-medium text-muted">
-            Credit Cards — Last 3 Cycles
+            Tarjetas de Crédito — Últimos 3 Ciclos
           </h2>
           {ccAccounts.length === 0 ? (
             <div className="flex h-56 items-center justify-center text-sm text-muted">
-              No credit cards configured
+              Sin tarjetas de crédito configuradas
             </div>
           ) : (
             <div className="mt-4 space-y-6">
@@ -245,7 +245,7 @@ export function DashboardView({
                     <p className="text-xs font-semibold text-white">{cc.name}</p>
                     <div className="mt-2 space-y-1.5">
                       {cycles.length === 0 ? (
-                        <p className="text-xs text-muted">No cycles yet</p>
+                        <p className="text-xs text-muted">Sin ciclos aún</p>
                       ) : (
                         cycles.map((cycle, i) => {
                           const prevCycle = cycles[i + 1];
@@ -302,10 +302,10 @@ export function DashboardView({
 
       {/* Top 6 Categories */}
       <div className="mt-6 rounded-xl border border-surface-3 bg-surface-1 p-5">
-        <h2 className="text-sm font-medium text-muted">Spending by Category</h2>
+        <h2 className="text-sm font-medium text-muted">Gastos por Categoría</h2>
         {topCategories.length === 0 ? (
           <div className="mt-4 py-8 text-center text-sm text-muted">
-            No category data for this month
+            Sin datos de categorías para este mes
           </div>
         ) : (
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">

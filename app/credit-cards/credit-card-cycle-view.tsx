@@ -43,7 +43,7 @@ export function CreditCardCycleView({
 
   const handleCloseCycle = async () => {
     if (!selectedCycle || selectedCycle.status !== "open") return;
-    if (!confirm("Close this billing cycle? It will be marked as a statement.")) return;
+    if (!confirm("¿Cerrar este ciclo de facturación? Se marcará como estado de cuenta.")) return;
     setClosing(true);
     await supabase.rpc("close_billing_cycle", { p_cycle_id: selectedCycle.id });
     setClosing(false);
@@ -53,9 +53,9 @@ export function CreditCardCycleView({
   if (cards.length === 0) {
     return (
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Credit Cards</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Tarjetas de Crédito</h1>
         <div className="mt-6 rounded-xl border border-surface-3 bg-surface-1 p-8 text-center text-sm text-muted">
-          No credit cards yet. Add one in <Link href="/accounts" className="text-brand hover:underline">Accounts</Link>.
+          Sin tarjetas de crédito. Agrega una en <Link href="/accounts" className="text-brand hover:underline">Cuentas</Link>.
         </div>
       </div>
     );
@@ -87,10 +87,10 @@ export function CreditCardCycleView({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Credit Cards
+            Tarjetas de Crédito
           </h1>
           <p className="mt-1 text-sm text-muted">
-            View transactions by billing cycle
+            Ver transacciones por ciclo de facturación
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export function CreditCardCycleView({
               <h2 className="text-xl font-semibold">{selectedCard.name}</h2>
             </div>
             <p className="mt-3 text-xs uppercase tracking-wider text-muted">
-              Total Owed
+              Total Adeudado
             </p>
             <p className="text-4xl font-bold tabular-nums text-danger">
               {formatCurrency(Number(selectedCard.balance))}
@@ -134,7 +134,7 @@ export function CreditCardCycleView({
             {selectedCard.credit_limit && (
               <div className="w-64">
                 <div className="flex justify-between text-xs">
-                  <span className="text-muted">Utilization</span>
+                  <span className="text-muted">Utilización</span>
                   <span className="tabular-nums font-medium">
                     {utilization.toFixed(1)}%
                   </span>
@@ -146,7 +146,7 @@ export function CreditCardCycleView({
                   />
                 </div>
                 <p className="mt-1 text-xs text-muted tabular-nums">
-                  Available:{" "}
+                  Disponible:{" "}
                   <span className="text-white">
                     {formatCurrency(
                       Number(selectedCard.credit_limit) - Number(selectedCard.balance)
@@ -157,13 +157,13 @@ export function CreditCardCycleView({
             )}
             {selectedCycle && (
               <div className="text-right">
-                <p className="text-xs text-muted">Selected Cycle</p>
+                <p className="text-xs text-muted">Ciclo Seleccionado</p>
                 <p className="text-sm font-medium tabular-nums">
                   {formatDate(selectedCycle.cycle_start, "MMM d")} —{" "}
                   {formatDate(selectedCycle.cycle_end, "MMM d, yyyy")}
                 </p>
                 <p className="mt-1 text-xs text-warning tabular-nums">
-                  Due {formatDate(selectedCycle.due_date, "MMM d")}
+                  Vence {formatDate(selectedCycle.due_date, "MMM d")}
                 </p>
               </div>
             )}
@@ -212,16 +212,16 @@ export function CreditCardCycleView({
         <div className="mt-6 rounded-xl border border-surface-3 bg-surface-1 p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h3 className="text-base font-semibold">Cycle Transactions</h3>
+              <h3 className="text-base font-semibold">Transacciones del Ciclo</h3>
               <p className="text-xs text-muted">
                 {formatDate(selectedCycle.cycle_start, "MMM d, yyyy")} —{" "}
                 {formatDate(selectedCycle.cycle_end, "MMM d, yyyy")}
-                {" · "}Due {formatDate(selectedCycle.due_date, "MMM d, yyyy")}
+                {" · "}Vence {formatDate(selectedCycle.due_date, "MMM d, yyyy")}
               </p>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-xs text-muted">Cycle Total</p>
+                <p className="text-xs text-muted">Total del Ciclo</p>
                 <p className="text-lg font-semibold tabular-nums text-danger">
                   {formatCurrency(Number(selectedCycle.cycle_spending))}
                 </p>
@@ -233,7 +233,7 @@ export function CreditCardCycleView({
                     disabled={closing}
                     className="rounded-lg border border-warning/30 bg-warning/10 px-4 py-2 text-sm font-medium text-warning hover:bg-warning/20"
                   >
-                    {closing ? "Closing…" : "Close Cycle"}
+                    {closing ? "Cerrando…" : "Cerrar Ciclo"}
                   </button>
                 )}
             </div>
@@ -243,19 +243,19 @@ export function CreditCardCycleView({
             selectedCycle.status !== "open" && (
               <div className="mt-4 grid grid-cols-3 gap-4 rounded-lg bg-surface-2 p-4">
                 <div>
-                  <p className="text-xs text-muted">Statement Balance</p>
+                  <p className="text-xs text-muted">Saldo del Estado de Cuenta</p>
                   <p className="text-sm font-medium tabular-nums">
                     {formatCurrency(Number(selectedCycle.statement_balance))}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted">Paid</p>
+                  <p className="text-xs text-muted">Pagado</p>
                   <p className="text-sm font-medium tabular-nums text-brand">
                     {formatCurrency(Number(selectedCycle.paid_amount))}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted">Remaining</p>
+                  <p className="text-xs text-muted">Pendiente</p>
                   <p className="text-sm font-medium tabular-nums text-danger">
                     {formatCurrency(
                       Math.max(
@@ -272,17 +272,17 @@ export function CreditCardCycleView({
           {/* Transactions */}
           {transactions.length === 0 ? (
             <div className="mt-6 flex h-32 items-center justify-center text-sm text-muted">
-              No transactions in this cycle yet
+              Sin transacciones en este ciclo
             </div>
           ) : (
             <div className="mt-6 overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-surface-3 text-left text-xs uppercase tracking-wider text-muted">
-                    <th className="pb-3 pr-4">Date</th>
-                    <th className="pb-3 pr-4">Description</th>
-                    <th className="pb-3 pr-4">Category</th>
-                    <th className="pb-3 text-right">Amount</th>
+                    <th className="pb-3 pr-4">Fecha</th>
+                    <th className="pb-3 pr-4">Descripción</th>
+                    <th className="pb-3 pr-4">Categoría</th>
+                    <th className="pb-3 text-right">Monto</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-surface-3">
@@ -323,8 +323,8 @@ export function CreditCardCycleView({
       ) : (
         <div className="mt-6 rounded-xl border border-surface-3 bg-surface-1 p-8 text-center text-sm text-muted">
           {selectedCard.statement_day
-            ? "No billing cycles yet. They'll be created automatically when you add transactions."
-            : "Configure the statement day for this card in Accounts → Credit Cards to track billing cycles."}
+            ? "Sin ciclos de facturación aún. Se crearán automáticamente al agregar transacciones."
+            : "Configura el día de corte en Cuentas → Tarjetas de Crédito para registrar ciclos."}
         </div>
       )}
     </div>

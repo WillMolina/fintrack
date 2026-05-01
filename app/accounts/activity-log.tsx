@@ -15,16 +15,16 @@ export function ActivityLog({
 }) {
   const router = useRouter();
   const supabase = createClient();
-  const [filter, setFilter] = useState<"all" | "payments" | "transfers">("all");
+  const [filter, setFilter] = useState<"todo" | "pagos" | "transferencias">("todo");
 
   const handleDeletePayment = async (id: string) => {
-    if (!confirm("Delete this payment? Balances will be reverted.")) return;
+    if (!confirm("¿Eliminar este pago? Los saldos serán revertidos.")) return;
     await supabase.from("cc_payments").delete().eq("id", id);
     router.refresh();
   };
 
   const handleDeleteTransfer = async (id: string) => {
-    if (!confirm("Delete this transfer? Balances will be reverted.")) return;
+    if (!confirm("¿Eliminar esta transferencia? Los saldos serán revertidos.")) return;
     await supabase.from("transfers").delete().eq("id", id);
     router.refresh();
   };
@@ -34,14 +34,14 @@ export function ActivityLog({
     | { kind: "transfer"; data: Transfer; date: string };
 
   const items: Item[] = [
-    ...(filter !== "transfers"
+    ...(filter !== "transferencias"
       ? payments.map<Item>((p) => ({
           kind: "payment",
           data: p,
           date: p.payment_date,
         }))
       : []),
-    ...(filter !== "payments"
+    ...(filter !== "pagos"
       ? transfers.map<Item>((t) => ({
           kind: "transfer",
           data: t,
@@ -53,7 +53,7 @@ export function ActivityLog({
   return (
     <div>
       <div className="flex gap-2 mb-4">
-        {(["all", "payments", "transfers"] as const).map((f) => (
+        {(["todo", "pagos", "transferencias"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
@@ -70,17 +70,17 @@ export function ActivityLog({
 
       {items.length === 0 ? (
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-8 text-center text-sm text-muted">
-          No activity yet
+          Sin actividad aún
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-surface-3 bg-surface-1">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-surface-3 text-left text-xs uppercase tracking-wider text-muted">
-                <th className="px-5 py-3">Date</th>
-                <th className="px-5 py-3">Type</th>
-                <th className="px-5 py-3">Details</th>
-                <th className="px-5 py-3 text-right">Amount</th>
+                <th className="px-5 py-3">Fecha</th>
+                <th className="px-5 py-3">Tipo</th>
+                <th className="px-5 py-3">Detalles</th>
+                <th className="px-5 py-3 text-right">Monto</th>
                 <th className="px-5 py-3"></th>
               </tr>
             </thead>
@@ -103,7 +103,7 @@ export function ActivityLog({
                             : "bg-blue-500/10 text-blue-400"
                         }`}
                       >
-                        {isPayment ? "💸 Payment" : "🔁 Transfer"}
+                        {isPayment ? "💸 Pago" : "🔁 Transferencia"}
                       </span>
                     </td>
                     <td className="px-5 py-3">

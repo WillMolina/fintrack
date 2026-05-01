@@ -16,7 +16,7 @@ export function TransactionList({
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this transaction?")) return;
+    if (!confirm("¿Eliminar esta transacción?")) return;
     setDeleting(id);
     await supabase.from("transactions").delete().eq("id", id);
     setDeleting(null);
@@ -26,7 +26,7 @@ export function TransactionList({
   if (transactions.length === 0) {
     return (
       <div className="flex h-40 items-center justify-center rounded-xl border border-surface-3 bg-surface-1 text-sm text-muted">
-        No transactions yet. Add one above or connect your Make.com webhook!
+        Sin transacciones aún. Agrega una o conecta tu webhook de Make.com.
       </div>
     );
   }
@@ -36,12 +36,12 @@ export function TransactionList({
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-surface-3 text-left text-xs uppercase tracking-wider text-muted">
-            <th className="px-5 py-3">Date</th>
-            <th className="px-5 py-3">Description</th>
-            <th className="px-5 py-3">Category</th>
-            <th className="px-5 py-3">Account</th>
-            <th className="px-5 py-3">Source</th>
-            <th className="px-5 py-3 text-right">Amount</th>
+            <th className="px-5 py-3">Fecha</th>
+            <th className="px-5 py-3">Descripción</th>
+            <th className="px-5 py-3">Categoría</th>
+            <th className="px-5 py-3">Cuenta</th>
+            <th className="px-5 py-3">Origen</th>
+            <th className="px-5 py-3 text-right">Monto</th>
             <th className="px-5 py-3"></th>
           </tr>
         </thead>
@@ -99,7 +99,7 @@ export function TransactionList({
                   onClick={() => handleDelete(tx.id)}
                   disabled={deleting === tx.id}
                   className="rounded p-1 text-muted transition-colors hover:bg-danger/10 hover:text-danger"
-                  title="Delete"
+                  title="Eliminar"
                 >
                   {deleting === tx.id ? "…" : "✕"}
                 </button>

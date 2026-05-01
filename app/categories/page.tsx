@@ -13,9 +13,9 @@ export default async function CategoriesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Categories</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">Categorías</h1>
       <p className="mt-1 text-sm text-muted">
-        Organize your transactions
+        Organiza tus transacciones
       </p>
       <div className="mt-6">
         <CategoryManager categories={categories ?? []} />

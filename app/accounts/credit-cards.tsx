@@ -18,7 +18,7 @@ export function CreditCards({
   if (ccAccounts.length === 0) {
     return (
       <div className="rounded-xl border border-surface-3 bg-surface-1 p-8 text-center text-sm text-muted">
-        No credit cards yet. Add a credit card account first.
+        Sin tarjetas de crédito. Primero agrega una cuenta de tarjeta de crédito.
       </div>
     );
   }
@@ -80,7 +80,7 @@ function CreditCardCard({
           onClick={() => setEditing(!editing)}
           className="rounded-lg border border-surface-4 px-3 py-1 text-xs text-muted hover:text-white"
         >
-          {editing ? "Cancel" : "Edit"}
+          {editing ? "Cancelar" : "Editar"}
         </button>
       </div>
 
@@ -88,7 +88,7 @@ function CreditCardCard({
         <form onSubmit={handleSave} className="mt-4 space-y-3">
           <div>
             <label className="mb-1 block text-xs text-muted">
-              Credit Limit
+              Límite de Crédito
             </label>
             <input
               type="number"
@@ -104,7 +104,7 @@ function CreditCardCard({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="mb-1 block text-xs text-muted">
-                Statement Day
+                Día de Corte
               </label>
               <input
                 type="number"
@@ -119,7 +119,7 @@ function CreditCardCard({
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-muted">Due Day</label>
+              <label className="mb-1 block text-xs text-muted">Día de Pago</label>
               <input
                 type="number"
                 min="1"
@@ -135,14 +135,14 @@ function CreditCardCard({
             type="submit"
             className="w-full rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dim"
           >
-            Save
+            Guardar
           </button>
         </form>
       ) : (
         <div className="mt-4 space-y-4">
           {/* Balance */}
           <div>
-            <p className="text-xs text-muted">Amount Owed</p>
+            <p className="text-xs text-muted">Saldo Adeudado</p>
             <p className="text-3xl font-semibold tabular-nums text-danger">
               {formatCurrency(account.balance)}
             </p>
@@ -157,7 +157,7 @@ function CreditCardCard({
           {account.credit_limit && (
             <div>
               <div className="flex justify-between text-xs">
-                <span className="text-muted">Utilization</span>
+                <span className="text-muted">Utilización</span>
                 <span className="tabular-nums">{utilization.toFixed(1)}%</span>
               </div>
               <div className="mt-1.5 h-2 w-full rounded-full bg-surface-3">
@@ -167,7 +167,7 @@ function CreditCardCard({
                 />
               </div>
               <p className="mt-1 text-xs text-muted">
-                Available:{" "}
+                Disponible:{" "}
                 <span className="tabular-nums text-white">
                   {formatCurrency(status?.available_credit ?? 0)}
                 </span>
@@ -179,20 +179,20 @@ function CreditCardCard({
           {status && (
             <div className="grid grid-cols-3 gap-3 border-t border-surface-3 pt-4">
               <div>
-                <p className="text-xs text-muted">Cycle</p>
+                <p className="text-xs text-muted">Ciclo</p>
                 <p className="text-xs tabular-nums">
                   {formatDate(status.cycle_start, "MMM d")} —{" "}
                   {formatDate(status.cycle_end, "MMM d")}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-muted">Cycle Spending</p>
+                <p className="text-xs text-muted">Gastos del Ciclo</p>
                 <p className="text-xs tabular-nums font-medium">
                   {formatCurrency(status.cycle_spending)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-muted">Due</p>
+                <p className="text-xs text-muted">Vence</p>
                 <p className="text-xs tabular-nums font-medium text-warning">
                   {formatDate(status.due_date, "MMM d")}
                 </p>

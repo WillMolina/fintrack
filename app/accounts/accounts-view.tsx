@@ -24,11 +24,11 @@ export function AccountsView({
   const [tab, setTab] = useState<Tab>("overview");
 
   const TABS: { key: Tab; label: string; icon: string }[] = [
-    { key: "overview",     label: "Overview",     icon: "🏦" },
-    { key: "credit_cards", label: "Credit Cards", icon: "💳" },
-    { key: "payment",      label: "Pay CC",       icon: "💸" },
-    { key: "transfer",     label: "Transfer",     icon: "🔁" },
-    { key: "activity",     label: "Activity",     icon: "📜" },
+    { key: "overview",     label: "Resumen",              icon: "🏦" },
+    { key: "credit_cards", label: "Tarjetas de Crédito", icon: "💳" },
+    { key: "payment",      label: "Pagar TC",             icon: "💸" },
+    { key: "transfer",     label: "Transferir",           icon: "🔁" },
+    { key: "activity",     label: "Actividad",            icon: "📜" },
   ];
 
   return (

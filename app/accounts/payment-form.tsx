@@ -35,7 +35,7 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
 
     const amount = parseFloat(form.amount);
     if (isNaN(amount) || amount <= 0) {
-      setError("Enter a valid amount");
+      setError("Ingresa un monto válido");
       setLoading(false);
       return;
     }
@@ -67,7 +67,7 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
   if (creditCards.length === 0) {
     return (
       <div className="rounded-xl border border-surface-3 bg-surface-1 p-8 text-center text-sm text-muted">
-        Add a credit card account first.
+        Primero agrega una cuenta de tarjeta de crédito.
       </div>
     );
   }
@@ -75,7 +75,7 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
   if (fundingAccounts.length === 0) {
     return (
       <div className="rounded-xl border border-surface-3 bg-surface-1 p-8 text-center text-sm text-muted">
-        Add a checking or cash account to make payments from.
+        Agrega una cuenta de débito o efectivo para realizar pagos.
       </div>
     );
   }
@@ -86,16 +86,15 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
   return (
     <div className="max-w-2xl">
       <div className="rounded-xl border border-surface-3 bg-surface-1 p-6">
-        <h2 className="font-medium">Make a Credit Card Payment</h2>
+        <h2 className="font-medium">Pagar Tarjeta de Crédito</h2>
         <p className="mt-1 text-xs text-muted">
-          This decreases the credit card balance and the source account's
-          available money.
+          Esto reduce el saldo de la tarjeta y el dinero disponible de la cuenta origen.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
             <label className="mb-1.5 block text-xs text-muted">
-              Credit Card
+              Tarjeta de Crédito
             </label>
             <select
               required
@@ -105,10 +104,10 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
               }
               className={inputClass}
             >
-              <option value="">Select a credit card…</option>
+              <option value="">Selecciona una tarjeta de crédito…</option>
               {creditCards.map((cc) => (
                 <option key={cc.id} value={cc.id}>
-                  {cc.name} — {formatCurrency(cc.balance)} owed
+                  {cc.name} — {formatCurrency(cc.balance)} adeudado
                 </option>
               ))}
             </select>
@@ -116,7 +115,7 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
 
           <div>
             <label className="mb-1.5 block text-xs text-muted">
-              Pay From
+              Pagar Desde
             </label>
             <select
               required
@@ -126,10 +125,10 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
               }
               className={inputClass}
             >
-              <option value="">Select source account…</option>
+              <option value="">Selecciona cuenta origen…</option>
               {fundingAccounts.map((acc) => (
                 <option key={acc.id} value={acc.id}>
-                  {acc.name} — {formatCurrency(acc.balance)} available
+                  {acc.name} — {formatCurrency(acc.balance)} disponible
                 </option>
               ))}
             </select>
@@ -138,7 +137,7 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="mb-1.5 block text-xs text-muted">
-                Amount
+                Monto
               </label>
               <input
                 type="number"
@@ -158,12 +157,12 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
                   }
                   className="mt-1 text-xs text-brand hover:underline"
                 >
-                  Pay full balance ({formatCurrency(selectedCC.balance)})
+                  Pagar saldo total ({formatCurrency(selectedCC.balance)})
                 </button>
               )}
             </div>
             <div>
-              <label className="mb-1.5 block text-xs text-muted">Date</label>
+              <label className="mb-1.5 block text-xs text-muted">Fecha</label>
               <input
                 type="date"
                 required
@@ -177,10 +176,10 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs text-muted">Notes</label>
+            <label className="mb-1.5 block text-xs text-muted">Notas</label>
             <input
               type="text"
-              placeholder="Optional"
+              placeholder="Opcional"
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               className={inputClass}
@@ -190,7 +189,7 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
           {/* Preview */}
           {selectedCC && selectedFrom && form.amount && (
             <div className="rounded-lg border border-surface-3 bg-surface-2 p-4 text-xs">
-              <p className="text-muted">After this payment:</p>
+              <p className="text-muted">Después de este pago:</p>
               <div className="mt-2 space-y-1 tabular-nums">
                 <div className="flex justify-between">
                   <span>{selectedCC.name}</span>
@@ -230,7 +229,7 @@ export function PaymentForm({ accounts }: { accounts: Account[] }) {
             disabled={loading}
             className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-dim disabled:opacity-50"
           >
-            {loading ? "Processing…" : "Make Payment"}
+            {loading ? "Procesando…" : "Realizar Pago"}
           </button>
         </form>
       </div>

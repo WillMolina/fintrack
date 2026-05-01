@@ -53,7 +53,7 @@ export function TransactionsView({
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this transaction?")) return;
+    if (!confirm("¿Eliminar esta transacción?")) return;
     setDeleting(id);
     await supabase.from("transactions").delete().eq("id", id);
     setDeleting(null);
@@ -72,10 +72,10 @@ export function TransactionsView({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Transactions
+            Transacciones
           </h1>
           <p className="mt-1 text-sm text-muted">
-            All your recorded expenses and income
+            Todos tus gastos e ingresos registrados
           </p>
         </div>
         <AddTransactionButton variant="primary" />
@@ -109,13 +109,13 @@ export function TransactionsView({
 
         <div className="flex items-center gap-6 text-sm">
           <div>
-            <span className="text-muted">Expenses </span>
+            <span className="text-muted">Gastos </span>
             <span className="tabular-nums font-medium text-danger">
               {formatCurrency(totals.expenses)}
             </span>
           </div>
           <div>
-            <span className="text-muted">Income </span>
+            <span className="text-muted">Ingresos </span>
             <span className="tabular-nums font-medium text-brand">
               {formatCurrency(totals.income)}
             </span>
@@ -128,13 +128,13 @@ export function TransactionsView({
             </span>
           </div>
           <div>
-            <span className="text-muted">Accounts </span>
+            <span className="text-muted">Cuentas </span>
             <span className={`tabular-nums font-medium ${monthlyAccountBalance >= 0 ? "text-brand" : "text-danger"}`}>
               {formatCurrency(monthlyAccountBalance)}
             </span>
           </div>
           <div>
-            <span className="text-muted">Count </span>
+            <span className="text-muted">Cantidad </span>
             <span className="tabular-nums font-medium">
               {transactions.length}
             </span>
@@ -149,10 +149,10 @@ export function TransactionsView({
           onChange={(e) => updateParam("type", e.target.value === "all" ? "" : e.target.value)}
           className={inputClass}
         >
-          <option value="all">All types</option>
-          <option value="expenses">Expenses only</option>
-          <option value="income">Income only</option>
-          <option value="credit">Credit card only</option>
+          <option value="all">Todos los tipos</option>
+          <option value="expenses">Solo gastos</option>
+          <option value="income">Solo ingresos</option>
+          <option value="credit">Solo tarjeta de crédito</option>
         </select>
 
         <select
@@ -160,7 +160,7 @@ export function TransactionsView({
           onChange={(e) => updateParam("category", e.target.value)}
           className={inputClass}
         >
-          <option value="">All categories</option>
+          <option value="">Todas las categorías</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.icon} {c.name}
@@ -173,7 +173,7 @@ export function TransactionsView({
           onChange={(e) => updateParam("account", e.target.value)}
           className={inputClass}
         >
-          <option value="">All accounts</option>
+          <option value="">Todas las cuentas</option>
           {accounts.map((a) => (
             <option key={a.id} value={a.id}>
               {a.type === "credit_card" ? "💳" : "🏦"} {a.name}
@@ -186,10 +186,10 @@ export function TransactionsView({
           onChange={(e) => updateParam("sort", e.target.value === "date_desc" ? "" : e.target.value)}
           className={inputClass}
         >
-          <option value="date_desc">Newest first</option>
-          <option value="date_asc">Oldest first</option>
-          <option value="amount_desc">Highest amount</option>
-          <option value="amount_asc">Lowest amount</option>
+          <option value="date_desc">Más reciente primero</option>
+          <option value="date_asc">Más antiguo primero</option>
+          <option value="amount_desc">Mayor monto</option>
+          <option value="amount_asc">Menor monto</option>
         </select>
 
         {hasActiveFilters && (
@@ -197,7 +197,7 @@ export function TransactionsView({
             onClick={clearFilters}
             className="rounded-lg border border-surface-4 px-3 py-1.5 text-sm text-muted hover:text-white"
           >
-            Clear filters
+            Limpiar filtros
           </button>
         )}
       </div>
@@ -206,7 +206,7 @@ export function TransactionsView({
       <div className="mt-4">
         {transactions.length === 0 ? (
           <div className="flex h-40 items-center justify-center rounded-xl border border-surface-3 bg-surface-1 text-sm text-muted">
-            No transactions match your filters
+            No hay transacciones que coincidan con los filtros
           </div>
         ) : (
           <div className="overflow-hidden rounded-xl border border-surface-3 bg-surface-1">
@@ -214,13 +214,13 @@ export function TransactionsView({
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-surface-3 text-left text-xs uppercase tracking-wider text-muted">
-                    <th className="px-5 py-3">Date</th>
-                    <th className="px-5 py-3">Description</th>
-                    <th className="px-5 py-3">Category</th>
-                    <th className="px-5 py-3">Account</th>
-                    <th className="px-5 py-3">CC</th>
-                    <th className="px-5 py-3">Source</th>
-                    <th className="px-5 py-3 text-right">Amount</th>
+                    <th className="px-5 py-3">Fecha</th>
+                    <th className="px-5 py-3">Descripción</th>
+                    <th className="px-5 py-3">Categoría</th>
+                    <th className="px-5 py-3">Cuenta</th>
+                    <th className="px-5 py-3">TC</th>
+                    <th className="px-5 py-3">Origen</th>
+                    <th className="px-5 py-3 text-right">Monto</th>
                     <th className="px-5 py-3"></th>
                   </tr>
                 </thead>
@@ -306,7 +306,7 @@ export function TransactionsView({
                             <button
                               onClick={() => setEditingTx(tx)}
                               className="rounded p-1 text-muted transition-colors hover:bg-surface-3 hover:text-white"
-                              title="Edit"
+                              title="Editar"
                             >
                               ✎
                             </button>
@@ -314,7 +314,7 @@ export function TransactionsView({
                               onClick={() => handleDelete(tx.id)}
                               disabled={deleting === tx.id}
                               className="rounded p-1 text-muted transition-colors hover:bg-danger/10 hover:text-danger"
-                              title="Delete"
+                              title="Eliminar"
                             >
                               {deleting === tx.id ? "…" : "✕"}
                             </button>

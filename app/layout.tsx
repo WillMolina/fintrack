@@ -5,6 +5,15 @@ import { LayoutShell } from "@/components/ui/layout-shell";
 export const metadata: Metadata = {
   title: "FinTrack",
   description: "Personal finance tracker",
+  icons: {
+    icon: "/logo.svg",
+    apple: "/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "FinTrack",
+  },
 };
 
 export default function RootLayout({

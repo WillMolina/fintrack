@@ -32,9 +32,9 @@ export default async function AccountsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Accounts</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">Cuentas</h1>
       <p className="mt-1 text-sm text-muted">
-        Manage balances, credit cards, and transfers
+        Administra saldos, tarjetas de crédito y transferencias
       </p>
       <div className="mt-6">
         <AccountsView

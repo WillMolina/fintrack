@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase-browser";
 import type { Category } from "@/lib/types";
 
 const COLOR_OPTIONS = [
-  "#ef4444", "#f59e0b", "#22c55e", "#3b82f6",
+  "#ef4444", "#f59e0b", "#18efc6", "#3b82f6",
   "#8b5cf6", "#ec4899", "#06b6d4", "#71717a",
 ];
 
@@ -34,7 +34,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this category? Transactions will become uncategorized.")) return;
+    if (!confirm("¿Eliminar esta categoría? Las transacciones quedarán sin categoría.")) return;
     await supabase.from("categories").delete().eq("id", id);
     router.refresh();
   };
@@ -47,7 +47,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
         className="flex flex-wrap items-end gap-4 rounded-xl border border-surface-3 bg-surface-1 p-5"
       >
         <div>
-          <label className="mb-1.5 block text-xs text-muted">Icon</label>
+          <label className="mb-1.5 block text-xs text-muted">Ícono</label>
           <input
             type="text"
             value={icon}
@@ -56,11 +56,11 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
           />
         </div>
         <div className="flex-1">
-          <label className="mb-1.5 block text-xs text-muted">Name</label>
+          <label className="mb-1.5 block text-xs text-muted">Nombre</label>
           <input
             type="text"
             required
-            placeholder="Category name"
+            placeholder="Nombre de categoría"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full rounded-lg border border-surface-4 bg-surface-2 px-3 py-2 text-sm text-white placeholder:text-muted focus:border-brand focus:outline-none"
@@ -89,7 +89,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
           disabled={loading}
           className="rounded-lg bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand-dim disabled:opacity-50"
         >
-          Add
+          Agregar
         </button>
       </form>
 
@@ -118,7 +118,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
             <button
               onClick={() => handleDelete(cat.id)}
               className="rounded p-1 text-muted transition-colors hover:bg-danger/10 hover:text-danger"
-              title="Delete"
+              title="Eliminar"
             >
               ✕
             </button>

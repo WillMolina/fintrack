@@ -4,12 +4,12 @@ import type { Account } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
 const TYPE_LABELS: Record<Account["type"], string> = {
-  credit_card: "Credit Card",
-  debit:       "Debit",
-  checking:    "Checking",
-  savings:     "Savings",
-  cash:        "Cash",
-  other:       "Other",
+  credit_card: "Tarjeta de Crédito",
+  debit:       "Débito",
+  checking:    "Cuenta Corriente",
+  savings:     "Ahorros",
+  cash:        "Efectivo",
+  other:       "Otro",
 };
 
 const TYPE_ICONS: Record<Account["type"], string> = {
@@ -41,7 +41,7 @@ export function AccountList({ accounts }: { accounts: Account[] }) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-6">
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-muted">
-            Total Assets
+            Total Activos
           </p>
           <p className="mt-2 text-2xl font-semibold tabular-nums text-brand">
             {formatCurrency(totalAssets)}
@@ -49,7 +49,7 @@ export function AccountList({ accounts }: { accounts: Account[] }) {
         </div>
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-muted">
-            Total Debt
+            Deuda Total
           </p>
           <p className="mt-2 text-2xl font-semibold tabular-nums text-danger">
             {formatCurrency(totalDebt)}
@@ -57,7 +57,7 @@ export function AccountList({ accounts }: { accounts: Account[] }) {
         </div>
         <div className="rounded-xl border border-surface-3 bg-surface-1 p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-muted">
-            Net Worth
+            Patrimonio Neto
           </p>
           <p
             className={`mt-2 text-2xl font-semibold tabular-nums ${
@@ -89,7 +89,7 @@ export function AccountList({ accounts }: { accounts: Account[] }) {
               </div>
               <div className="mt-4">
                 <p className="text-xs text-muted">
-                  {isCC ? "Owed" : "Available"}
+                  {isCC ? "Adeudado" : "Disponible"}
                 </p>
                 <p
                   className={`text-2xl font-semibold tabular-nums ${

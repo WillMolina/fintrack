@@ -100,7 +100,7 @@ export function AddTransactionModal({
     setError("");
     const amount = parseFloat(form.amount);
     if (isNaN(amount) || amount <= 0) {
-      setError("Enter a valid amount");
+      setError("Ingresa un monto válido");
       return;
     }
 
@@ -141,12 +141,12 @@ export function AddTransactionModal({
     "w-full rounded-lg border border-surface-4 bg-surface-2 px-3 py-2 text-sm text-white placeholder:text-muted focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand";
 
   return (
-    <Modal open={open} onClose={onClose} title={transaction ? "Edit Transaction" : "Add Transaction"} size="md">
+    <Modal open={open} onClose={onClose} title={transaction ? "Editar Transacción" : "Agregar Transacción"} size="md">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Amount + type toggle */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1.5 block text-xs text-muted">Amount</label>
+            <label className="mb-1.5 block text-xs text-muted">Monto</label>
             <div className="flex gap-2">
               <input
                 type="number"
@@ -175,7 +175,7 @@ export function AddTransactionModal({
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs text-muted">Date</label>
+            <label className="mb-1.5 block text-xs text-muted">Fecha</label>
             <input
               type="date"
               required
@@ -188,12 +188,12 @@ export function AddTransactionModal({
 
         <div>
           <label className="mb-1.5 block text-xs text-muted">
-            Description
+            Descripción
           </label>
           <input
             type="text"
             required
-            placeholder="Grocery run, Netflix, etc."
+            placeholder="Mercado, Netflix, etc."
             value={form.description}
             onChange={(e) =>
               setForm({ ...form, description: e.target.value })
@@ -204,17 +204,17 @@ export function AddTransactionModal({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1.5 block text-xs text-muted">Merchant</label>
+            <label className="mb-1.5 block text-xs text-muted">Comercio</label>
             <input
               type="text"
-              placeholder="Optional"
+              placeholder="Opcional"
               value={form.merchant}
               onChange={(e) => setForm({ ...form, merchant: e.target.value })}
               className={inputClass}
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs text-muted">Category</label>
+            <label className="mb-1.5 block text-xs text-muted">Categoría</label>
             <select
               value={form.category_id}
               onChange={(e) =>
@@ -222,7 +222,7 @@ export function AddTransactionModal({
               }
               className={inputClass}
             >
-              <option value="">Uncategorized</option>
+              <option value="">Sin categoría</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.icon} {cat.name}
@@ -233,7 +233,7 @@ export function AddTransactionModal({
         </div>
 
         <div>
-          <label className="mb-1.5 block text-xs text-muted">Account</label>
+          <label className="mb-1.5 block text-xs text-muted">Cuenta</label>
           <select
             value={form.account_id}
             onChange={(e) =>
@@ -245,7 +245,7 @@ export function AddTransactionModal({
             }
             className={inputClass}
           >
-            <option value="">No account</option>
+            <option value="">Sin cuenta</option>
             {accounts.map((acc) => (
               <option key={acc.id} value={acc.id}>
                 {acc.type === "credit_card" ? "💳" : "🏦"} {acc.name}
@@ -258,12 +258,11 @@ export function AddTransactionModal({
         {isCC && (
           <div className="rounded-lg border border-brand/30 bg-brand/5 p-4">
             <label className="mb-1.5 flex items-center gap-2 text-xs font-medium text-brand">
-              💳 Billing Cycle
+              💳 Ciclo de Facturación
             </label>
             {cycles.length === 0 ? (
               <p className="text-xs text-muted">
-                No cycles found. Set the statement day for this card in
-                Accounts → Credit Cards.
+                Sin ciclos. Configura el día de corte en Cuentas → Tarjetas de Crédito.
               </p>
             ) : (
               <select
@@ -273,32 +272,32 @@ export function AddTransactionModal({
                 }
                 className={inputClass}
               >
-                <option value="">Auto-assign by date</option>
+                <option value="">Asignar automáticamente por fecha</option>
                 {cycles.map((c) => (
                   <option key={c.id} value={c.id}>
                     {formatDate(c.cycle_start, "MMM d")} —{" "}
-                    {formatDate(c.cycle_end, "MMM d, yyyy")} · Due{" "}
+                    {formatDate(c.cycle_end, "MMM d, yyyy")} · Vence{" "}
                     {formatDate(c.due_date, "MMM d")} ·{" "}
                     {c.status === "open"
-                      ? "🟢 Open"
+                      ? "🟢 Abierto"
                       : c.status === "closed"
-                        ? "🔴 Closed"
-                        : "✅ Paid"}
+                        ? "🔴 Cerrado"
+                        : "✅ Pagado"}
                   </option>
                 ))}
               </select>
             )}
             <p className="mt-2 text-xs text-muted">
-              Defaults to the cycle containing the transaction date.
+              Por defecto usa el ciclo que contiene la fecha de la transacción.
             </p>
           </div>
         )}
 
         <div>
-          <label className="mb-1.5 block text-xs text-muted">Notes</label>
+          <label className="mb-1.5 block text-xs text-muted">Notas</label>
           <input
             type="text"
-            placeholder="Optional"
+            placeholder="Opcional"
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             className={inputClass}
@@ -317,14 +316,14 @@ export function AddTransactionModal({
             onClick={onClose}
             className="flex-1 rounded-lg border border-surface-4 px-4 py-2.5 text-sm font-medium text-muted hover:text-white"
           >
-            Cancel
+            Cancelar
           </button>
           <button
             type="submit"
             disabled={loading}
             className="flex-1 rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-dim disabled:opacity-50"
           >
-            {loading ? "Saving…" : transaction ? "Save Changes" : "Add Transaction"}
+            {loading ? "Guardando…" : transaction ? "Guardar cambios" : "Agregar"}
           </button>
         </div>
       </form>

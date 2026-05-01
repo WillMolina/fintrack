@@ -8,16 +8,8 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: "#f0fdf5",
-          100: "#dcfce8",
-          200: "#bbf7d1",
-          300: "#86efac",
-          400: "#4ade80",
-          500: "#22c55e",
-          600: "#16a34a",
-          700: "#15803d",
-          800: "#166534",
-          900: "#14532d",
+          DEFAULT: "#18efc6",
+          dim: "#257767",
         },
         surface: {
           0: "#0a0a0b",

@@ -32,13 +32,13 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
     setSuccess("");
 
     if (form.from_account_id === form.to_account_id) {
-      setError("From and To must be different accounts");
+      setError("Las cuentas de origen y destino deben ser diferentes");
       return;
     }
 
     const amount = parseFloat(form.amount);
     if (isNaN(amount) || amount <= 0) {
-      setError("Enter a valid amount");
+      setError("Ingresa un monto válido");
       return;
     }
 
@@ -72,7 +72,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
   if (transferable.length < 2) {
     return (
       <div className="rounded-xl border border-surface-3 bg-surface-1 p-8 text-center text-sm text-muted">
-        You need at least two non-credit accounts to make transfers.
+        Necesitas al menos dos cuentas para realizar transferencias.
       </div>
     );
   }
@@ -83,16 +83,15 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
   return (
     <div className="max-w-2xl">
       <div className="rounded-xl border border-surface-3 bg-surface-1 p-6">
-        <h2 className="font-medium">Transfer Between Accounts</h2>
+        <h2 className="font-medium">Transferir entre Cuentas</h2>
         <p className="mt-1 text-xs text-muted">
-          Move money between your checking, cash, savings accounts. Doesn't
-          affect your expenses.
+          Mueve dinero entre tus cuentas. No afecta tus gastos.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs text-muted">From</label>
+              <label className="mb-1.5 block text-xs text-muted">Desde</label>
               <select
                 required
                 value={form.from_account_id}
@@ -101,7 +100,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
                 }
                 className={inputClass}
               >
-                <option value="">Select source…</option>
+                <option value="">Selecciona origen…</option>
                 {transferable.map((acc) => (
                   <option key={acc.id} value={acc.id}>
                     {acc.name} ({formatCurrency(acc.balance)})
@@ -111,7 +110,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs text-muted">To</label>
+              <label className="mb-1.5 block text-xs text-muted">Hacia</label>
               <select
                 required
                 value={form.to_account_id}
@@ -120,7 +119,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
                 }
                 className={inputClass}
               >
-                <option value="">Select destination…</option>
+                <option value="">Selecciona destino…</option>
                 {transferable
                   .filter((acc) => acc.id !== form.from_account_id)
                   .map((acc) => (
@@ -134,7 +133,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1.5 block text-xs text-muted">Amount</label>
+              <label className="mb-1.5 block text-xs text-muted">Monto</label>
               <input
                 type="number"
                 step="0.01"
@@ -147,7 +146,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs text-muted">Date</label>
+              <label className="mb-1.5 block text-xs text-muted">Fecha</label>
               <input
                 type="date"
                 required
@@ -161,10 +160,10 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs text-muted">Notes</label>
+            <label className="mb-1.5 block text-xs text-muted">Notas</label>
             <input
               type="text"
-              placeholder="Optional"
+              placeholder="Opcional"
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               className={inputClass}
@@ -174,7 +173,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
           {/* Preview */}
           {fromAcc && toAcc && form.amount && (
             <div className="rounded-lg border border-surface-3 bg-surface-2 p-4 text-xs">
-              <p className="text-muted">After this transfer:</p>
+              <p className="text-muted">Después de esta transferencia:</p>
               <div className="mt-2 space-y-1 tabular-nums">
                 <div className="flex justify-between">
                   <span>{fromAcc.name}</span>
@@ -214,7 +213,7 @@ export function TransferForm({ accounts }: { accounts: Account[] }) {
             disabled={loading}
             className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-dim disabled:opacity-50"
           >
-            {loading ? "Processing…" : "Transfer"}
+            {loading ? "Procesando…" : "Transferir"}
           </button>
         </form>
       </div>

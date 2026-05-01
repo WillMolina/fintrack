@@ -25,11 +25,12 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => setSidebarOpen(true)}
               className="rounded-lg p-1.5 text-lg text-muted hover:text-white"
-              aria-label="Open menu"
+              aria-label="Abrir menú"
             >
               ☰
             </button>
-            <span className="text-base font-semibold">💰 FinTrack</span>
+            <img src="/logo.svg" alt="" className="h-6 w-6" />
+            <span className="text-base font-semibold">FinTrack</span>
           </header>
 
           <main className="flex-1 overflow-y-auto">
