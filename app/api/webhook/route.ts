@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from("transactions")
       .insert({
-        amount: Math.abs(parseFloat(amount)), // always positive for expenses
+        amount: Math.abs(parseFloat(String(amount).replace(/,/g, ""))),
         description,
         merchant: merchant || null,
         date: date || new Date().toISOString().split("T")[0],
