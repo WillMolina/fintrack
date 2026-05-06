@@ -64,19 +64,11 @@ export default async function DashboardPage({
   const trendData = (trendRaw ?? []) as MonthlyTrend[];
 
   // Extract selected month totals from trend data for the summary card
+  // (RPC already includes CC payments in total_expenses)
   const selectedMonthTrend = trendData.find((d) =>
     d.month.startsWith(monthStr)
   ) ?? { total_expenses: 0, total_income: 0 };
-
-  // CC payments made this month are real cash outflows — add to expenses
-  const { data: ccPayments } = await supabase
-    .from("cc_payments")
-    .select("amount")
-    .gte("payment_date", monthStart)
-    .lte("payment_date", monthEnd);
-  const ccPaymentTotal = (ccPayments ?? []).reduce((s, p) => s + Number(p.amount), 0);
-
-  const monthExpenses = Number(selectedMonthTrend.total_expenses) + ccPaymentTotal;
+  const monthExpenses = Number(selectedMonthTrend.total_expenses);
   const monthIncome = Number(selectedMonthTrend.total_income);
 
   // Last 3 cycles per CC account
