@@ -81,7 +81,15 @@ export default async function TransactionsPage({
   const nextMonth = format(addMonths(monthDate, 1), "yyyy-MM");
   const monthLabel = format(monthDate, "MMMM yyyy");
 
-  // Stats for header
+  // CC payments made this month count as real cash expenses
+  const { data: ccPayments } = await supabase
+    .from("cc_payments")
+    .select("amount")
+    .gte("payment_date", monthStart)
+    .lte("payment_date", monthEnd);
+  const ccPaymentTotal = (ccPayments ?? []).reduce((s, p) => s + Number(p.amount), 0);
+
+  // Stats for header — exclude CC charges, add CC payments
   const totals = filtered.reduce(
     (acc, t) => {
       if (t.account?.type === "credit_card") return acc;
@@ -90,7 +98,7 @@ export default async function TransactionsPage({
       else acc.income += Math.abs(amt);
       return acc;
     },
-    { expenses: 0, income: 0 }
+    { expenses: ccPaymentTotal, income: 0 }
   );
 
   const selectedAccount = (accounts ?? []).find((a) => a.id === sp.account);
