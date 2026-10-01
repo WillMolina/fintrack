@@ -7,7 +7,8 @@ import type { Transaction, Category, Account } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { AddTransactionButton } from "@/components/ui/add-transaction-button";
 import { AddTransactionModal } from "@/components/ui/add-transaction-modal";
-import { useState } from "react";
+import { BulkEditBar } from "./bulk-edit-bar";
+import { useEffect, useState } from "react";
 
 export function TransactionsView({
   transactions,
@@ -38,6 +39,35 @@ export function TransactionsView({
   const supabase = createClient();
   const [deleting, setDeleting] = useState<string | null>(null);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  // Drop selections that are no longer in the list (month/filter change)
+  useEffect(() => {
+    setSelectedIds((prev) => {
+      const visible = new Set(transactions.map((t) => t.id));
+      const next = new Set([...prev].filter((id) => visible.has(id)));
+      return next.size === prev.size ? prev : next;
+    });
+  }, [transactions]);
+
+  const selectedTxs = transactions.filter((t) => selectedIds.has(t.id));
+  const allSelected =
+    transactions.length > 0 && selectedTxs.length === transactions.length;
+
+  const toggleOne = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setSelectedIds(
+      allSelected ? new Set() : new Set(transactions.map((t) => t.id))
+    );
+  };
 
   const updateParam = (key: string, value: string) => {
     const next = new URLSearchParams(searchParams);
@@ -202,6 +232,15 @@ export function TransactionsView({
         )}
       </div>
 
+      {selectedTxs.length > 0 && (
+        <BulkEditBar
+          selected={selectedTxs}
+          categories={categories}
+          accounts={accounts}
+          onClear={() => setSelectedIds(new Set())}
+        />
+      )}
+
       {/* Transaction Table */}
       <div className="mt-4">
         {transactions.length === 0 ? (
@@ -214,6 +253,18 @@ export function TransactionsView({
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-surface-3 text-left text-xs uppercase tracking-wider text-muted">
+                    <th className="w-10 pl-5 py-3">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        ref={(el) => {
+                          if (el) el.indeterminate = selectedTxs.length > 0 && !allSelected;
+                        }}
+                        onChange={toggleAll}
+                        className="h-4 w-4 cursor-pointer accent-brand"
+                        title="Seleccionar todas"
+                      />
+                    </th>
                     <th className="px-5 py-3">Fecha</th>
                     <th className="px-5 py-3">Descripción</th>
                     <th className="px-5 py-3">Categoría</th>
@@ -227,11 +278,22 @@ export function TransactionsView({
                 <tbody className="divide-y divide-surface-3">
                   {transactions.map((tx) => {
                     const isCC = tx.account?.type === "credit_card";
+                    const isSelected = selectedIds.has(tx.id);
                     return (
                       <tr
                         key={tx.id}
-                        className="hover:bg-surface-2 transition-colors"
+                        className={`transition-colors ${
+                          isSelected ? "bg-brand/5" : "hover:bg-surface-2"
+                        }`}
                       >
+                        <td className="w-10 pl-5 py-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleOne(tx.id)}
+                            className="h-4 w-4 cursor-pointer accent-brand"
+                          />
+                        </td>
                         <td className="px-5 py-3 tabular-nums text-muted whitespace-nowrap">
                           {formatDate(tx.date, "MMM d")}
                         </td>
