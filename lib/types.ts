@@ -129,3 +129,24 @@ export interface MonthlySummary {
   net: number;
   tx_count: number;
 }
+
+export interface SpendingAlert {
+  id: string;
+  category_id: string;
+  description_pattern: string | null;
+  monthly_limit: number;
+  threshold_pct: number;
+  is_active: boolean;
+  last_alert_month: string | null;
+  last_alert_level: "warning" | "exceeded" | null;
+  created_at: string;
+  category?: Category;
+}
+
+export interface SpendingAlertStatus {
+  alert: SpendingAlert;
+  spent: number;
+  pct: number;
+  remaining: number;
+  level: "ok" | "warning" | "exceeded";
+}

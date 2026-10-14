@@ -34,6 +34,7 @@ export function DashboardView({
   ccCycles,
   ccAccounts,
   topCategories,
+  spendingAlerts,
 }: {
   monthStr: string;
   monthLabel: string;
@@ -49,6 +50,7 @@ export function DashboardView({
   ccCycles: BillingCycleSummary[];
   ccAccounts: Account[];
   topCategories: MonthlyCategoryTotal[];
+  spendingAlerts: { id: string; level: string; message: string }[];
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -117,6 +119,23 @@ export function DashboardView({
           </Link>
         </div>
       </div>
+
+      {/* Spending alerts near/over their monthly cap */}
+      {spendingAlerts.length > 0 && (
+        <Link
+          href="/alerts"
+          className="mt-6 block space-y-1.5 rounded-xl border border-warning/30 bg-warning/5 p-4 text-sm hover:border-warning/60 transition-colors"
+        >
+          {spendingAlerts.map((a) => (
+            <div
+              key={a.id}
+              className={a.level === "exceeded" ? "text-danger" : "text-warning"}
+            >
+              {a.message}
+            </div>
+          ))}
+        </Link>
+      )}
 
       {/* 3 Summary Cards */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">

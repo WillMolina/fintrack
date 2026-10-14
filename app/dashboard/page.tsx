@@ -2,6 +2,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { format, startOfMonth, endOfMonth, parseISO, addMonths, subMonths } from "date-fns";
 import type { Account, BillingCycleSummary, MonthlyCategoryTotal } from "@/lib/types";
 import { DashboardView } from "./dashboard-view";
+import { getAlertStatuses, alertMessage } from "@/lib/alerts";
 
 export const dynamic = "force-dynamic";
 
@@ -94,6 +95,13 @@ export default async function DashboardPage({
     .filter((c) => c.category !== "Deudas")
     .slice(0, 6);
 
+  // Active spending alerts that are near or over their cap this month
+  const alertStatuses = await getAlertStatuses(supabase, monthStr, { activeOnly: true });
+  const spendingAlerts = alertStatuses
+    .filter((s) => s.level !== "ok")
+    .sort((a, b) => b.pct - a.pct)
+    .map((s) => ({ id: s.alert.id, level: s.level, message: alertMessage(s) }));
+
   return (
     <DashboardView
       monthStr={monthStr}
@@ -110,6 +118,7 @@ export default async function DashboardPage({
       ccCycles={ccCycles ?? []}
       ccAccounts={ccAccounts}
       topCategories={topCategories}
+      spendingAlerts={spendingAlerts}
     />
   );
 }

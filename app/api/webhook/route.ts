@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { collectNewAlerts } from "@/lib/alerts";
 
 // Service role key bypasses RLS for server-side webhook inserts
 const supabase = createClient(
@@ -25,6 +26,11 @@ const supabase = createClient(
  *
  * NOTE: If the resolved account is a credit card, the database will
  * auto-assign the correct billing cycle based on the date.
+ *
+ * Response includes `alerts`: spending alerts that this transaction pushed
+ * past their warning threshold or monthly cap (each level is reported once
+ * per month). Route it in Make.com to WhatsApp/email/Telegram, e.g. using
+ * each alert's `message`.
  *
  * Headers:
  *   x-webhook-secret: <your WEBHOOK_SECRET>
@@ -100,7 +106,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, transaction: data });
+    // 5. Spending alerts — never fail the insert because of them
+    let alerts: Awaited<ReturnType<typeof collectNewAlerts>> = [];
+    try {
+      alerts = await collectNewAlerts(supabase, data);
+    } catch (e) {
+      console.error("Spending alerts check failed", e);
+    }
+
+    return NextResponse.json({ success: true, transaction: data, alerts });
   } catch (err) {
     return NextResponse.json(
       { error: "Invalid request body" },
