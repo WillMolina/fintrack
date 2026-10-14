@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import type { Category, SpendingAlert, SpendingAlertStatus } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
+import { describePattern } from "@/lib/alerts";
 
 const blankForm = {
   category_id: "",
@@ -129,7 +130,7 @@ export function AlertsManager({
             </label>
             <input
               type="text"
-              placeholder="Ej: Uber, Rappi"
+              placeholder="Ej: uber  ·  -rappi"
               value={form.description_pattern}
               onChange={(e) =>
                 setForm({ ...form, description_pattern: e.target.value })
@@ -162,7 +163,9 @@ export function AlertsManager({
         </div>
         <p className="mt-3 text-xs text-muted">
           La descripción se busca dentro de la descripción o el comercio de cada transacción
-          (sin importar mayúsculas ni tildes). Déjala vacía para vigilar toda la categoría.
+          (sin importar mayúsculas ni tildes). Antepón <b>-</b> para excluir: <b>-rappi</b> cuenta
+          todo lo de la categoría excepto Rappi. Separa varios términos con comas
+          (<b>uber, -eats</b>). Déjala vacía para vigilar toda la categoría.
         </p>
         {error && <p className="mt-3 text-sm text-danger">{error}</p>}
         <div className="mt-4 flex gap-2">
@@ -207,7 +210,7 @@ export function AlertsManager({
                         {a.category?.icon} {a.category?.name}
                         {a.description_pattern && (
                           <span className="ml-2 rounded bg-surface-3 px-2 py-0.5 text-xs text-muted">
-                            “{a.description_pattern}”
+                            {describePattern(a.description_pattern)}
                           </span>
                         )}
                       </div>

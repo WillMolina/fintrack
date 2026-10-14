@@ -14,14 +14,35 @@ type MatchableTx = {
 const normalize = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 
+/**
+ * Comma-separated terms; a leading "-" excludes. "uber, -rappi" matches
+ * text containing "uber" and not "rappi". Only exclusions → everything else.
+ */
+export function parsePattern(pattern: string | null) {
+  const terms = (pattern ?? "").split(",").map((t) => t.trim()).filter(Boolean);
+  const clean = (t: string) => normalize(t.replace(/^-/, ""));
+  return {
+    include: terms.filter((t) => !t.startsWith("-")).map(clean).filter(Boolean),
+    exclude: terms.filter((t) => t.startsWith("-")).map(clean).filter(Boolean),
+  };
+}
+
 export function alertMatches(alert: SpendingAlert, tx: MatchableTx) {
   if (tx.category_id !== alert.category_id || Number(tx.amount) <= 0) return false;
-  if (!alert.description_pattern) return true;
-  const pattern = normalize(alert.description_pattern);
-  return (
-    normalize(tx.description).includes(pattern) ||
-    normalize(tx.merchant ?? "").includes(pattern)
-  );
+  const { include, exclude } = parsePattern(alert.description_pattern);
+  const text = `${normalize(tx.description)} ${normalize(tx.merchant ?? "")}`;
+  if (exclude.some((t) => text.includes(t))) return false;
+  return include.length === 0 || include.some((t) => text.includes(t));
+}
+
+export function describePattern(pattern: string | null) {
+  const { include, exclude } = parsePattern(pattern);
+  return [
+    include.length ? `con "${include.join('" o "')}"` : "",
+    exclude.length ? `sin "${exclude.join('" ni "')}"` : "",
+  ]
+    .filter(Boolean)
+    .join(" y ");
 }
 
 /**
@@ -71,7 +92,8 @@ export async function getAlertStatuses(
 
 export function alertLabel(alert: SpendingAlert) {
   const cat = alert.category ? `${alert.category.icon ?? ""} ${alert.category.name}`.trim() : "Categoría";
-  return alert.description_pattern ? `${cat} · "${alert.description_pattern}"` : cat;
+  const desc = describePattern(alert.description_pattern);
+  return desc ? `${cat} · ${desc}` : cat;
 }
 
 export function alertMessage(s: SpendingAlertStatus) {
