@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { collectNewAlerts } from "@/lib/alerts";
+import { fetchActiveRules, findRuleCategory } from "@/lib/category-rules";
 
 // Service role key bypasses RLS for server-side webhook inserts
 const supabase = createClient(
@@ -23,6 +24,9 @@ const supabase = createClient(
  *   "account": "Chase Sapphire",  // optional, matched by name
  *   "notes": "Monthly subscription"
  * }
+ *
+ * If no category is sent (or it doesn't match one), the category rules
+ * (/rules) fill it from description/merchant; otherwise it stays empty.
  *
  * NOTE: If the resolved account is a credit card, the database will
  * auto-assign the correct billing cycle based on the date.
@@ -72,6 +76,16 @@ export async function POST(request: NextRequest) {
         .limit(1)
         .single();
       category_id = cat?.id ?? null;
+    }
+
+    // 2b. Fall back to category rules; unrecognized stays uncategorized
+    if (!category_id) {
+      try {
+        const rules = await fetchActiveRules(supabase);
+        category_id = findRuleCategory(rules, description, merchant || null)?.category_id ?? null;
+      } catch (e) {
+        console.error("Category rules lookup failed", e);
+      }
     }
 
     // 3. Resolve account by name (optional)

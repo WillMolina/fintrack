@@ -150,3 +150,12 @@ export interface SpendingAlertStatus {
   remaining: number;
   level: "ok" | "warning" | "exceeded";
 }
+
+export interface CategoryRule {
+  id: string;
+  pattern: string;
+  category_id: string;
+  is_active: boolean;
+  created_at: string;
+  category?: Category;
+}

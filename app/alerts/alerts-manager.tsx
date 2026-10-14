@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import type { Category, SpendingAlert, SpendingAlertStatus } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
-import { describePattern } from "@/lib/alerts";
+import { describePattern } from "@/lib/text-match";
 
 const blankForm = {
   category_id: "",

@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/credit-cards", label: "Tarjetas de Crédito", icon: "💳" },
   { href: "/accounts", label: "Cuentas", icon: "🏦" },
   { href: "/categories", label: "Categorías", icon: "🏷️" },
+  { href: "/rules", label: "Reglas", icon: "🪄" },
   { href: "/alerts", label: "Alertas", icon: "🔔" },
   { href: "/export", label: "Exportar", icon: "📤" },
 ];

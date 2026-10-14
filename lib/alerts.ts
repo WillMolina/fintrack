@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { format, startOfMonth, endOfMonth, parseISO } from "date-fns";
 import type { SpendingAlert, SpendingAlertStatus } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
+import { describePattern, textMatches } from "@/lib/text-match";
 
 type MatchableTx = {
   category_id: string | null;
@@ -10,39 +11,9 @@ type MatchableTx = {
   amount: number;
 };
 
-// Case- and accent-insensitive, so "cafe" matches "Café"
-const normalize = (s: string) =>
-  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
-
-/**
- * Comma-separated terms; a leading "-" excludes. "uber, -rappi" matches
- * text containing "uber" and not "rappi". Only exclusions → everything else.
- */
-export function parsePattern(pattern: string | null) {
-  const terms = (pattern ?? "").split(",").map((t) => t.trim()).filter(Boolean);
-  const clean = (t: string) => normalize(t.replace(/^-/, ""));
-  return {
-    include: terms.filter((t) => !t.startsWith("-")).map(clean).filter(Boolean),
-    exclude: terms.filter((t) => t.startsWith("-")).map(clean).filter(Boolean),
-  };
-}
-
 export function alertMatches(alert: SpendingAlert, tx: MatchableTx) {
   if (tx.category_id !== alert.category_id || Number(tx.amount) <= 0) return false;
-  const { include, exclude } = parsePattern(alert.description_pattern);
-  const text = `${normalize(tx.description)} ${normalize(tx.merchant ?? "")}`;
-  if (exclude.some((t) => text.includes(t))) return false;
-  return include.length === 0 || include.some((t) => text.includes(t));
-}
-
-export function describePattern(pattern: string | null) {
-  const { include, exclude } = parsePattern(pattern);
-  return [
-    include.length ? `con "${include.join('" o "')}"` : "",
-    exclude.length ? `sin "${exclude.join('" ni "')}"` : "",
-  ]
-    .filter(Boolean)
-    .join(" y ");
+  return textMatches(alert.description_pattern, tx.description, tx.merchant);
 }
 
 /**

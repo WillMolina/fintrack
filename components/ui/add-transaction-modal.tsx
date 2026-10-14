@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import { Modal } from "@/components/ui/modal";
-import type { Category, Account, BillingCycle, Transaction } from "@/lib/types";
+import type { Category, Account, BillingCycle, CategoryRule, Transaction } from "@/lib/types";
+import { findRuleCategory, sortRules } from "@/lib/category-rules";
 import { formatDate } from "@/lib/utils";
 
 export function AddTransactionModal({
@@ -58,7 +59,28 @@ export function AddTransactionModal({
       setForm(blankForm);
     }
     setError("");
+    setCategoryTouched(false);
   }, [open, transaction]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Category rules: auto-fill category for new transactions until the user picks one
+  const [rules, setRules] = useState<CategoryRule[]>([]);
+  const [categoryTouched, setCategoryTouched] = useState(false);
+
+  useEffect(() => {
+    if (!open || transaction) return;
+    (async () => {
+      const { data } = await supabase.from("category_rules").select("*").eq("is_active", true);
+      setRules(sortRules((data ?? []) as CategoryRule[]));
+    })();
+  }, [open, transaction]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const ruleCategoryId =
+    findRuleCategory(rules, form.description, form.merchant || null)?.category_id ?? "";
+
+  useEffect(() => {
+    if (transaction || categoryTouched || ruleCategoryId === form.category_id) return;
+    setForm((f) => ({ ...f, category_id: ruleCategoryId }));
+  }, [ruleCategoryId, categoryTouched, transaction]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetched cycles for the currently-selected CC account
   const [cycles, setCycles] = useState<BillingCycle[]>([]);
@@ -217,9 +239,10 @@ export function AddTransactionModal({
             <label className="mb-1.5 block text-xs text-muted">Categoría</label>
             <select
               value={form.category_id}
-              onChange={(e) =>
-                setForm({ ...form, category_id: e.target.value })
-              }
+              onChange={(e) => {
+                setCategoryTouched(true);
+                setForm({ ...form, category_id: e.target.value });
+              }}
               className={inputClass}
             >
               <option value="">Sin categoría</option>
@@ -229,6 +252,9 @@ export function AddTransactionModal({
                 </option>
               ))}
             </select>
+            {!transaction && !categoryTouched && ruleCategoryId && (
+              <p className="mt-1 text-xs text-brand">🪄 Sugerida por una regla</p>
+            )}
           </div>
         </div>
 
