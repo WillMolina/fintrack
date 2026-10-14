@@ -81,18 +81,22 @@ export default async function TransactionsPage({
   const nextMonth = format(addMonths(monthDate, 1), "yyyy-MM");
   const monthLabel = format(monthDate, "MMMM yyyy");
 
-  // CC payments made this month count as real cash expenses
-  const { data: ccPayments } = await supabase
-    .from("cc_payments")
-    .select("amount")
-    .gte("payment_date", monthStart)
-    .lte("payment_date", monthEnd);
+  // Category filter: totals are the sum of the listed rows (CC charges included).
+  // Otherwise cash basis: CC payments made this month count as real expenses.
+  const sumListed = Boolean(sp.category);
+  const { data: ccPayments } = sumListed
+    ? { data: [] }
+    : await supabase
+        .from("cc_payments")
+        .select("amount")
+        .gte("payment_date", monthStart)
+        .lte("payment_date", monthEnd);
   const ccPaymentTotal = (ccPayments ?? []).reduce((s, p) => s + Number(p.amount), 0);
 
-  // Stats for header — exclude CC charges, add CC payments
+  // Stats for header — cash basis excludes CC charges and adds CC payments
   const totals = filtered.reduce(
     (acc, t) => {
-      if (t.account?.type === "credit_card") return acc;
+      if (!sumListed && t.account?.type === "credit_card") return acc;
       const amt = Number(t.amount);
       if (amt > 0) acc.expenses += amt;
       else acc.income += Math.abs(amt);
